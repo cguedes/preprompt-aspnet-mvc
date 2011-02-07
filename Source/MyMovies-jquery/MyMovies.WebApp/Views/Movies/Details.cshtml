@@ -1,0 +1,75 @@
+﻿@model MyMovies.DomainModel.Movie
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+@Html.ActionLink("Create Comment", "CreateComment", new { movieId=Model.ID }) |
+<fieldset>
+    <legend>Movie</legend>
+
+    <div class="display-label">Title</div>
+    <div class="display-field">@Model.Title</div>
+
+    <div class="display-label">Year</div>
+    <div class="display-field">@Model.Year</div>
+
+    <div class="display-label">Genre</div>
+    <div class="display-field">@Model.Genre</div>
+
+    <div class="display-label">Director</div>
+    <div class="display-field">@Model.Director</div>
+
+    <div class="display-label">Actors</div>
+    <div class="display-field">@Model.Actors</div>
+
+    @*<div class="display-label">Image</div>*@
+    @*<div class="display-field">@Model.Image</div>*@
+    <img src="@Model.Image" alt="movie image" />
+
+    <div class="display-label">Runtime</div>
+    <div class="display-field">@Model.Runtime</div>
+</fieldset>
+@Html.Partial("Comments", Model.Comments)     
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+
+@* Tweak to have jquery intellisense in Razor pages *@
+@if (false) { 
+   <script src="../../Scripts/jquery-1.4.4-vsdoc.js" type="text/javascript"></script>
+}
+<script src="../../Scripts/jquery-ui.js" type="text/javascript"></script>
+<link href="../../Content/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript">
+
+    $(function() 
+    { 
+		$("#addComment").click(function() 
+        { 
+            var addCommentUrl = '@Url.Action("AddComment")';
+            var data = $("#addCommentForm").serialize();
+
+            $.post(addCommentUrl, data, function(res) 
+            { 
+                alert(res);
+            }, "json");
+
+        });
+
+    });
+
+</script>
+<form id="addCommentForm">
+<fieldset>
+    <input type="hidden" name="movieId" value="@Model.ID" />
+    <p>Comment: <textarea id="comment" name="comment" ></textarea></p>
+    <p>Rating: <input id="rating" name="rating" /></p>
+    <input id="addComment" type="button" value="comment" />
+</fieldset>
+</form>
