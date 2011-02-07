@@ -42,10 +42,8 @@ namespace MyMovies.WebApp
 
         protected void Application_Start()
         {
-            DbDatabase.SetInitializer(new MoviesInitializer());
             AppStart_Structuremap.Start();
-            DbDatabase.SetInitializer<MovieDbContext>(new MoviesInitializer());
-
+            DbDatabase.SetInitializer(new MoviesInitializer());
 
             AreaRegistration.RegisterAllAreas();
             RegisterGlobalFilters(GlobalFilters.Filters);
