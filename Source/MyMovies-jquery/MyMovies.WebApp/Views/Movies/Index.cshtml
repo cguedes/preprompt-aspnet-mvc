@@ -1,17 +1,22 @@
 ﻿@model IEnumerable<MyMovies.DomainModel.Movie>
-
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
-
+<h2>
+    Index</h2>
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+<p style="text-align:right">
+Filter: <input name="filter" id="filter" />
+</p>
+
 <table>
+    <thead>
     <tr>
-        <th></th>
+        <th>
+        </th>
         <th>
             Title
         </th>
@@ -34,38 +39,87 @@
             Runtime
         </th>
     </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
-        </td>
-        <td>
-            @item.Title
-        </td>
-        <td>
-            @item.Year
-        </td>
-        <td>
-            @item.Genre
-        </td>
-        <td>
-            @item.Director
-        </td>
-        <td>
-            @item.Actors
-        </td>
-        <td>
-            @*<img src="@item.Image" alt="movie image" />*@
-            @item.Image
-        </td>
-        <td>
-            @item.Runtime
-        </td>
-    </tr>
-}
-
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ID })
+            </td>
+            <td>
+                @item.Title
+            </td>
+            <td>
+                @item.Year
+            </td>
+            <td>
+                @item.Genre
+            </td>
+            <td>
+                @item.Director
+            </td>
+            <td>
+                @item.Actors
+            </td>
+            <td>
+                <img src="@item.Image" alt="@item.Title" title="@item.Title" style="width:40px" />
+                @*@item.Image*@
+            </td>
+            <td>
+                @item.Runtime
+            </td>
+        </tr>
+    }
+    </tbody>
 </table>
 
+@* Tweak to have jquery intellisense in Razor pages *@
+@if (false) { 
+   <script src="../../Scripts/jquery-1.4.4-vsdoc.js" type="text/javascript"></script>
+}
+<script type="text/javascript">
+
+    function lightup()   { $(this).css("opacity", 0.6); }
+    function lightdown() { $(this).css("opacity", 1);   }
+
+    $(function() { 
+        // Zebra stripping on table rows
+        $("table tbody tr:nth-child(2n)").css("background-color", "#FAFAFA");
+        $("table tbody tr:nth-child(2n+1)").css("background-color", "#F1F1F1");
+
+        // Hover effect on table rows
+        $("table tbody tr").mouseenter(lightup).mouseleave(lightdown);
+    });
+
+
+    // Filter table content code
+    function filterTable(e)
+    {
+        if(e.keyCode != 13) { return; }
+
+        var text = $("#filter").val();
+        
+        if(!text)
+        {
+            // input is empty (show all the table rows)
+            $("table tbody tr").fadeIn();
+            return;
+        }
+
+        // Hide rows that contains the given text
+        $("table tbody tr:contains(" + text + ")").fadeIn("slow");
+        $("table tbody tr:not(:contains(" + text + "))").fadeOut("slow");
+    }
+
+    $(function() {
+        // Focus filter
+        $("#filter")
+            .focus()
+            .keypress(filterTable);
+    });
+
+
+</script>
